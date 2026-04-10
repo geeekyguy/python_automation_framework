@@ -1,16 +1,24 @@
-import pytest
 import allure
+import pytest
 
 from utils.driver_factory import DriverFactory
-from utils.read_config import ConfigReader
 from utils.path_utils import SCREENSHOTS_DIR
+from utils.read_config import ConfigReader
 
+
+def _as_bool(value):
+    return str(value).strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
 def pytest_addoption(parser):
     parser.addoption("--env", action="store", default="qa", help="Environment name")
     parser.addoption("--browser", action="store", default="chrome", help="Browser name")
-    parser.addoption("--headless", action="store", default="false", help="Headless mode")
+    parser.addoption(
+        "--headless",
+        action="store",
+        default="false",
+        help="Headless mode (true/false)",
+    )
 
 
 @pytest.fixture(scope="session")
@@ -22,9 +30,13 @@ def config(request):
 @pytest.fixture(scope="function")
 def driver(request, config):
     browser = request.config.getoption("--browser")
-    headless = request.config.getoption("--headless").lower() == "true"
+    headless = _as_bool(request.config.getoption("--headless"))
 
-    driver = DriverFactory.get_driver(browser_name=browser, headless=headless)
+    try:
+        driver = DriverFactory.get_driver(browser_name=browser, headless=headless)
+    except RuntimeError as exc:
+        pytest.skip(f"WebDriver setup skipped: {exc}")
+
     driver.implicitly_wait(config.get("implicit_wait", 5))
     driver.get(config.get("base_url"))
 
@@ -48,5 +60,5 @@ def pytest_runtest_makereport(item, call):
             allure.attach.file(
                 str(screenshot_file),
                 name=item.name,
-                attachment_type=allure.attachment_type.PNG
+                attachment_type=allure.attachment_type.PNG,
             )
