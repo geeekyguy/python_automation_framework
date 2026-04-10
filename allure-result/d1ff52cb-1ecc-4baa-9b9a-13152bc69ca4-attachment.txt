@@ -1,0 +1,5 @@
+[32mINFO    [0m root:test_valid_login_1.py:27 Browser launched & navigated to the URL
+[32mINFO    [0m root:test_valid_login_1.py:29 Entered User name
+[32mINFO    [0m root:test_valid_login_1.py:31 Entered password
+[32mINFO    [0m root:test_valid_login_1.py:33 Clicked on Login button
+[32mINFO    [0m root:test_valid_login_1.py:37 Verify Dashboard

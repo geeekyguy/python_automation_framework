@@ -1,0 +1,1 @@
+[1m[31mERROR   [0m root:test_valid_login_1.py:47 Login Attempt failed due to authentication
