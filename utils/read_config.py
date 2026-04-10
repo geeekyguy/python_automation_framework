@@ -1,5 +1,5 @@
-from pathlib import Path
 import yaml
+from utils.path_utils import CONFIG_DIR
 
 
 class ConfigReader:
@@ -8,8 +8,7 @@ class ConfigReader:
         self.config_data = self._load_config()
 
     def _load_config(self):
-        project_root = Path(__file__).resolve().parent.parent
-        config_path = project_root / "config" / f"{self.env}.yaml"
+        config_path = CONFIG_DIR / f"{self.env}.yaml"
 
         if not config_path.exists():
             raise FileNotFoundError(f"Config file not found at: {config_path}")

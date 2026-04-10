@@ -1,9 +1,10 @@
-import os
 import pytest
 import allure
 
 from utils.driver_factory import DriverFactory
 from utils.read_config import ConfigReader
+from utils.path_utils import SCREENSHOTS_DIR
+
 
 
 def pytest_addoption(parser):
@@ -40,12 +41,12 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call" and report.failed:
         driver = item.funcargs.get("driver")
         if driver:
-            os.makedirs("screenshots", exist_ok=True)
-            file_name = f"screenshots/{item.name}.png"
-            driver.save_screenshot(file_name)
+            SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
+            screenshot_file = SCREENSHOTS_DIR / f"{item.name}.png"
+            driver.save_screenshot(str(screenshot_file))
 
             allure.attach.file(
-                file_name,
+                str(screenshot_file),
                 name=item.name,
                 attachment_type=allure.attachment_type.PNG
             )
