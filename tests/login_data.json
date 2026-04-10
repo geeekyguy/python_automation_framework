@@ -1,0 +1,7 @@
+[
+  {
+    "username": "wrong_user",
+    "password": "wrong_pass",
+    "expected_error": "Invalid credentials"
+  }
+]
